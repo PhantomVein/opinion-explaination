@@ -1,8 +1,8 @@
 from data.Explain import Explain
 import re
 import collections
-from transition.State import *
-
+import numpy as np
+import  torch
 
 def read_corpus(file_path):
     data = []

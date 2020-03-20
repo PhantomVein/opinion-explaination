@@ -4,14 +4,14 @@ sys.path.extend(["../../", "../", "./"])
 import random
 import itertools
 import argparse
+from data.Vocab import *
 from data.Dataloader import *
 from driver.Config import *
 import time
 from modules.biLSTM import *
-from modules.PretrainedWordEncoder import *
 from sklearn import metrics
-from modules.BertTokenHelper import *
 import pickle
+
 
 
 class Optimizer:
