@@ -17,7 +17,7 @@ class BiLSTM(nn.Module):
         packed_embedded = nn.utils.rnn.pack_padded_sequence(embedded, sequence_length, batch_first=True)
         packed_outputs, hidden = self.lstm(packed_embedded)
         outputs, _ = nn.utils.rnn.pad_packed_sequence(packed_outputs, batch_first=True, padding_value=0.0)
-        out = self.fc(outputs[:, 0, :])  # 句子开始时刻的 hidden state
+        out = self.fc(torch.sum(outputs, 1))  # 句子开始时刻的 hidden state
 
         # outputs, hidden = self.lstm(embedded)
         # out = self.fc(outputs[:, -1, :])  # 句子最后时刻的 hidden state

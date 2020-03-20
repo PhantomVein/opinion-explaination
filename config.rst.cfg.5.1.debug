@@ -31,14 +31,14 @@ num_classes = 3
 end_layer = 12
 
 [Optimizer]
-L2_REG = 1e-6
+L2_REG = 0
 learning_rate = 1e-3
-decay = .75
-decay_steps = 10
 beta_1 = .9
-beta_2 = .9
-epsilon = 1e-12
+beta_2 = .999
+epsilon = 1e-08
 clip = 5.0
+decay = 1
+decay_steps = 10
 
 [Run]
 train_iters = 50000

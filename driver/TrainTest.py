@@ -45,8 +45,8 @@ def train(train_inst, dev_data, test_data, model, vocab, config):
                          )
                          )
 
-    # model_optimizer = Optimizer(model_param, config, config.learning_rate)
-    model_optimizer = torch.optim.Adam(model.parameters(), lr=config.learning_rate)
+    model_optimizer = Optimizer(model_param, config, config.learning_rate)
+    # model_optimizer = torch.optim.Adam(model.parameters(), lr=config.learning_rate)
 
     global_step = 0
     best_score = 0
