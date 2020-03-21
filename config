@@ -10,7 +10,7 @@ min_occur_count = 0
 [Save]
 save_dir = experiments/rst_model
 config_file = %(save_dir)s/config.cfg
-save_model_path = %(save_dir)s/model
+save_model_path = %(save_dir)s/classify_model
 save_vocab_path = %(save_dir)s/vocab
 load_dir = experiments/rst_model
 load_model_path = %(load_dir)s/model
@@ -42,7 +42,7 @@ decay_steps = 10
 [Run]
 train_iters = 50000
 train_batch_size = 128
-test_batch_size = 1
+test_batch_size = 128
 validate_every = 100
 save_after = 10
 update_every = 1

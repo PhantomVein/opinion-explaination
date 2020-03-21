@@ -2,7 +2,8 @@ from data.Explain import Explain
 import re
 import collections
 import numpy as np
-import  torch
+import torch
+
 
 def read_corpus(file_path):
     data = []
@@ -144,18 +145,6 @@ def batch_slice(data, batch_size):
         yield sentences
 
 
-# def inst(data, feats=None, actions=None, candidate=None):
-#     inst = []
-#     if feats is not None and actions is not None:
-#         assert len(data) == len(actions) and len(data) == len(feats) and len(data) == len(candidate)
-#         for idx in range(len(data)):
-#             inst.append((data[idx], feats[idx], actions[idx], candidate[idx]))
-#         return inst
-#     else:
-#         for idx in range(len(data)):
-#             inst.append((data[idx], None, None, None))
-#         return inst
-
 def inst(data):
     return data
 
@@ -199,34 +188,6 @@ def batch_data_variable(batch, vocab, config):
     batch_features_length = torch.IntTensor(batch_features_length).to(config.device)
     batch_gold_label = torch.LongTensor(batch_gold_label).to(config.device)
     return batch_features, batch_features_length, batch_gold_label
-
-
-def batch_sent2span_offset(batch, config):
-    batch_size = len(batch)
-    max_sent_len = max([len(sent) for data in batch for sent in data[0].sentences])
-    max_edu_num = max([len(data[0].EDUs) for data in batch])
-    max_edu_len = max([len(edu.words) for data in batch for edu in data[0].EDUs])
-    if config.max_edu_len < max_edu_len: max_edu_len = config.max_edu_len
-    index = np.ones((batch_size, max_edu_num, max_edu_len), dtype=int) * (max_sent_len)
-    for idx in range(batch_size):
-        data = batch[idx]
-        sentences = data[0].sentences
-        sent_index = []
-        for sent_idx, sentence in enumerate(sentences):
-            sent_len = len(sentence)
-            for sent_idy in range(sent_len):
-                sent_index.append(sent_idx * (max_sent_len + 1) + sent_idy)
-        edus = data[0].EDUs
-        id = 0
-        edu_num = len(edus)
-        for idy in range(edu_num):
-            edu = edus[idy]
-            edu_len = len(edu.words[:config.max_edu_len])
-            for idz in range(edu_len):
-                index[idx, idy, idz] = sent_index[id]
-                id += 1
-    index = torch.from_numpy(index).view(batch_size, max_edu_num, max_edu_len)
-    return index
 
 
 def batch_pretrain_variable_sent_level(batch, vocab, config, tokenizer):

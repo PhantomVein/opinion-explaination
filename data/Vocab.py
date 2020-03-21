@@ -23,40 +23,6 @@ class Vocab(object):
 
         print("Vocab info: #words {0}".format(self.vocab_size))
 
-    # def load_pretrained_embs(self, embfile):
-    #     embedding_dim = -1
-    #     word_count = 0
-    #     with open(embfile, encoding='utf-8') as f:
-    #         for line in f.readlines():
-    #             if word_count < 1:
-    #                 values = line.split()
-    #                 embedding_dim = len(values) - 1
-    #             word_count += 1
-    #     print('Total words: ' + str(word_count) + '\n')
-    #     print('The dim of pretrained embeddings: ' + str(embedding_dim) + '\n')
-    #
-    #     index = len(self._id2word)
-    #     embeddings = np.zeros((word_count + index, embedding_dim))
-    #     with open(embfile, encoding='utf-8') as f:
-    #         for line in f.readlines():
-    #             values = line.split()
-    #             self._id2extword.append(values[0])
-    #             vector = np.array(values[1:], dtype='float64')
-    #             embeddings[self.UNK] += vector
-    #             embeddings[index] = vector
-    #             index += 1
-    #
-    #     embeddings[self.UNK] = embeddings[self.UNK] / word_count
-    #     embeddings = embeddings / np.std(embeddings)
-    #
-    #     reverse = lambda x: dict(zip(x, range(len(x))))
-    #     self._extword2id = reverse(self._id2extword)
-    #
-    #     if len(self._extword2id) != len(self._id2extword):
-    #         print("serious bug: extern words dumplicated, please check!")
-    #
-    #     return embeddings
-
     def create_pretrained_embs(self, embfile):
         word_vectors = KeyedVectors.load_word2vec_format(embfile, binary=False)
         wv_matrix = list()

@@ -1,6 +1,4 @@
 import sys
-
-sys.path.extend(["../../", "../", "./"])
 import random
 import itertools
 import argparse
@@ -12,6 +10,7 @@ from modules.biLSTM import *
 from sklearn import metrics
 import pickle
 
+sys.path.extend(["../../", "../", "./"])
 
 
 class Optimizer:
@@ -132,6 +131,7 @@ def predict(data, model, vocab, config, outputFile, test=False):
 
     assert len(labels_all) == len(predict_all)
     accuracy = metrics.accuracy_score(labels_all, predict_all)
+    f1 = metrics.f1_score(labels_all, predict_all, average='macro')
 
     outf = open(outputFile, mode='w', encoding='utf8')
     for index, predict in enumerate(predict_all):
@@ -141,7 +141,7 @@ def predict(data, model, vocab, config, outputFile, test=False):
     outf.close()
     end = time.time()
     during_time = float(end - start)
-    print("samples num: %d,running time = %.2f ,accuracy: %.4f" % (len(data), during_time, accuracy))
+    print("samples num: %d,running time = %.2f ,accuracy: %.4f, f1: %.4f" % (len(data), during_time, accuracy, f1))
     if test:
         report = metrics.classification_report(labels_all, predict_all, target_names=['1', '2', '3'], digits=5)
         confusion = metrics.confusion_matrix(labels_all, predict_all)
@@ -149,7 +149,7 @@ def predict(data, model, vocab, config, outputFile, test=False):
         print(report)
         print("Confusion Matrix...")
         print(confusion)
-    return accuracy
+    return f1
 
 
 if __name__ == '__main__':
@@ -164,8 +164,8 @@ if __name__ == '__main__':
     print("CuDNN: \n", torch.backends.cudnn.enabled)
 
     argparser = argparse.ArgumentParser()
-    argparser.add_argument('--config_file', default='examples/default.cfg')
-    argparser.add_argument('--model', default='BaseParser')
+    argparser.add_argument('--config_file', default='config')
+    argparser.add_argument('--dataset', required=True, help='choose a dataset')
     argparser.add_argument('--thread', default=4, type=int, help='thread num')
     argparser.add_argument('--use-cuda', action='store_true', default=True)
 
@@ -176,7 +176,10 @@ if __name__ == '__main__':
     # dev_data = read_corpus(config.dev_file)
     # test_data = read_corpus(config.test_file)
 
-    train_data, dev_data, test_data = read_slice_hotel_corpus(config.test_file)
+    if args.dataset == 'hotel':
+        train_data, dev_data, test_data = read_slice_hotel_corpus(config.test_file)
+    else:
+        train_data, dev_data, test_data = read_slice_phone_corpus(config.test_file)
 
     vocab = creatVocab(train_data + dev_data + test_data, config.min_occur_count)
     embedding = vocab.create_pretrained_embs(config.pretrained_embeddings_file)  # load embeddings

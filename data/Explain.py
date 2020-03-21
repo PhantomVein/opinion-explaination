@@ -1,5 +1,4 @@
 import jieba
-import copy
 
 
 class Explain:
